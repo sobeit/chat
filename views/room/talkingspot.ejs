@@ -1,0 +1,33 @@
+<h2>Talking Spot</h2>
+<h3>Chatter ID:<%= id %></h3>
+<div id='message_area'>
+  <ul id='message_list'>
+  </ul>
+</div>
+<div>
+  <input type='text' id='message'></input>
+  <input type='button' id='send' value='送信'></input>
+</div>
+<!--SCRIPTS-->
+<script src="/linker/js/jquery-2.0.3.min.js"></script>
+<!--SCRIPTS END-->
+<script type='text/javascript'>
+$(function(){
+  socket.get('/room/checkin',{'userID':<%= id %>},function(res){
+  });
+  socket.on('message',function(msg){
+    var model = msg['model'];
+    if(model=='user') {
+      var checkinMessage = 'In!!:'+msg['id'];
+      alert(checkinMessage);
+    } else if(model=='chat'){
+      var chatMessage = '<li>'+msg['data']['chatterId']+':'+msg['data']['message']+'</li>';
+      $('#message_list').append(chatMessage);
+    }
+  });
+  $('#send').click(function(){
+    socket.post('/chat/say', {'chatterId':<%= id %>, 'message':$('#message').val()},function(res){});
+    $('#message').val('');
+  });
+});
+</script>
