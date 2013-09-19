@@ -7,7 +7,7 @@
 
 module.exports = {
 
-  in: function (req, res) {
+  door: function (req, res) {
     res.view();
   }  
 
